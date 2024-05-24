@@ -6,17 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TaskManagementSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class addappuser : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "AppUserId",
-                table: "TaskModel",
-                type: "nvarchar(450)",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -162,10 +156,27 @@ namespace TaskManagementSystem.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskModel_AppUserId",
-                table: "TaskModel",
-                column: "AppUserId");
+            migrationBuilder.CreateTable(
+                name: "TaskModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskModel", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskModel_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -206,21 +217,15 @@ namespace TaskManagementSystem.Migrations
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_TaskModel_AspNetUsers_AppUserId",
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskModel_AppUserId",
                 table: "TaskModel",
-                column: "AppUserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id");
+                column: "AppUserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_TaskModel_AspNetUsers_AppUserId",
-                table: "TaskModel");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -237,18 +242,13 @@ namespace TaskManagementSystem.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "TaskModel");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropIndex(
-                name: "IX_TaskModel_AppUserId",
-                table: "TaskModel");
-
-            migrationBuilder.DropColumn(
-                name: "AppUserId",
-                table: "TaskModel");
         }
     }
 }
