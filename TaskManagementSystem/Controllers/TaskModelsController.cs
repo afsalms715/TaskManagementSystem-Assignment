@@ -25,10 +25,19 @@ namespace TaskManagementSystem.Controllers
 
         // GET: TaskModels
         
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? Title,string? Status)
         {
             var curUser = _httpContextAccessor.HttpContext?.User.GetUserId();
-            return View(await _context.TaskModel.Where(T=>T.AppUserId==curUser).ToListAsync());
+            var tasks = await _context.TaskModel.Where(T => T.AppUserId == curUser).OrderByDescending(t => t.DueDate).ToListAsync();
+            if (Title != null)
+            {
+                tasks=tasks.Where(t => t.Title.Contains(Title)).ToList();
+            }
+            if (Status != null)
+            {
+                tasks = tasks.Where(t => t.Status==Status).ToList();
+            }
+            return View(tasks);
             //return View(new List<TaskModel>() { new TaskModel() { Title = "test", Description = "ts", Id = 1, AppUserId = "1", DueDate = DateTime.Now, Status = "Incomplite" } });
         }
 

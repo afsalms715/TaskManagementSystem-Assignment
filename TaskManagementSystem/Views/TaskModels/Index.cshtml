@@ -9,6 +9,32 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form method="get">
+    <div class="row"> 
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label  class="control-label">Search By Title</label>
+                    <input name="Title" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Filter by Status</label>
+                    <select name="Status" class="form-control">
+                        <option value="">All</option>
+                        <option value="Incomplete">Incomplete</option>
+                        <option value="Complete">Complete</option>
+                    </select>
+                </div>
+            </div>   
+            <div class="col-md-3">
+                <div class="form-group">
+                
+                    <input type="submit" value="Apply" class="form-control btn btn-primary mt-4">
+                </div>
+            </div> 
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
